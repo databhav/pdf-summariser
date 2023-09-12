@@ -2,18 +2,6 @@ import streamlit as st
 import pandas as pd 
 import re
 
-# for stopwords removal
-import nltk
-from nltk.corpus import stopwords
-# for text extraction from pdf
-import fitz
-# for sentence tokenization
-from nltk.tokenize import sent_tokenize
-# for word tokenization
-from nltk.tokenize import word_tokenize
-# stopwords removal
-from nltk.corpus import stopwords
-
 
 # to extract text from pdf using PyMuPDF
 def extract_text_pdf(pdf):
@@ -75,6 +63,15 @@ def get_summary(df1, max_words):
             
     return summary
 
+def segment_sentences(pdf_data2):
+  sentences = re.split("[.!?]", pdf_data2)
+  return sentences
+
+def tokenize(pdf_data2):
+  tokens = re.split("[ .,!?]", pdf_data2)
+  return tokens
+
+
 
 st.header("Pdf summarizer:")
 num_of_words = int(st.text_input("Enter number of maximum words for summary:",value=500))
@@ -85,12 +82,13 @@ if pdf is not None:
 
 extracted_pdf = extract_text_pdf(pdf)
 extracted_pdf = re.sub('\n', ' ', extracted_pdf)
-sentences = sent_tokenize(extracted_pdf)
-sentences = sentences
-words = word_tokenize(extracted_pdf)
+sentences = segment_sentences(extracted_pdf)
+words = tokenize(extracted_pdf)
 
+stopwords = pd.read_csv('/stopwords.csv')
+stopwords = list(stopwords['0'])
 words_lower = punctution_removal_lowercase_conversion(words)
-words_sw = [w for w in words_lower if w not in nltk.corpus.stopwords.words("english")]
+words_sw = [w for w in words_lower if w not in stopwords]
 words_sw = empty_string_removal(words_sw)
 
 freqTable = frequency_table(words_sw)

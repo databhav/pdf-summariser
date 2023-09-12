@@ -76,7 +76,7 @@ def tokenize(pdf_data2):
 
 st.header("Pdf summarizer:")
 num_of_words = int(st.text_input("Enter number of maximum words for summary:",value=500))
-pdf = st.file_uploader("Upload PDF:")
+pdf = st.file_uploader("Upload PDF:",accept_multiple_files=False)
 
 if pdf is not None:
     text = extract_text_pdf(pdf.name)

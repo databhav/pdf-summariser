@@ -84,7 +84,7 @@ extracted_pdf = re.sub('\n', ' ', extracted_pdf)
 sentences = segment_sentences(extracted_pdf)
 words = tokenize(extracted_pdf)
 
-stopwords = pd.read_csv('/home/anubhav/pyprojects/resolute_ai/stopwords.csv')
+stopwords = pd.read_csv('stopwords.csv')
 stopwords = list(stopwords['0'])
 words_lower = punctution_removal_lowercase_conversion(words)
 words_sw = [w for w in words_lower if w not in stopwords]

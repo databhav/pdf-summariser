@@ -6,7 +6,7 @@ import fitz
 
 # to extract text from pdf using PyMuPDF
 def extract_text_pdf(pdf):
-    with fitz.open(pdf) as doc:
+    with pdf as doc:
         text = ""
         for page in doc:
             text += page.get_text()
@@ -76,17 +76,15 @@ def tokenize(pdf_data2):
 
 st.header("Pdf summarizer:")
 num_of_words = int(st.text_input("Enter number of maximum words for summary:",value=500))
-pdf = st.file_uploader("Upload PDF:",accept_multiple_files=False)
 
-if pdf is not None:
-    text = extract_text_pdf(pdf.name)
+pdf = fitz.open(st.file_uploader("Upload PDF:",accept_multiple_files=False))
 
 extracted_pdf = extract_text_pdf(pdf)
 extracted_pdf = re.sub('\n', ' ', extracted_pdf)
 sentences = segment_sentences(extracted_pdf)
 words = tokenize(extracted_pdf)
 
-stopwords = pd.read_csv('stopwords.csv')
+stopwords = pd.read_csv('/home/anubhav/pyprojects/resolute_ai/stopwords.csv')
 stopwords = list(stopwords['0'])
 words_lower = punctution_removal_lowercase_conversion(words)
 words_sw = [w for w in words_lower if w not in stopwords]
